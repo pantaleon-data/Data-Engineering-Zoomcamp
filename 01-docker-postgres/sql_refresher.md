@@ -16,7 +16,7 @@ WHERE
 LIMIT 100;
 ```
 
-Showing locations with the highest pickups
+Joins taxi trip data with the zones table to find the top 10 pickup locations by trip count.
 ```sql
 SELECT
 	CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
@@ -27,6 +27,25 @@ FROM
 WHERE
 	t."PULocationID" = zpu."LocationID"
 GROUP BY pickup_loc
+ORDER BY COUNT(*) DESC
+LIMIT 10;
+```
+Joins taxi trip data with the zones table twice to identify the top 10 pickup-to-drop-off routes by trip count.
+```sql
+SELECT
+	CONCAT(zpu."Borough", ' | ', zpu."Zone") AS "pickup_loc",
+	CONCAT(zdo."Borough", ' | ', zdo."Zone") AS "dropoff_loc",
+	COUNT(*) AS trip_count
+FROM
+	yellow_taxi_trips_2021_1 t,
+	zones zpu,
+	zones zdo
+WHERE
+	t."PULocationID" = zpu."LocationID"
+	AND t."DOLocationID" = zdo."LocationID"
+GROUP BY 
+	pickup_loc,
+	dropoff_loc
 ORDER BY COUNT(*) DESC
 LIMIT 10;
 ```
