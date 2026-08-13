@@ -49,3 +49,17 @@ GROUP BY
 ORDER BY COUNT(*) DESC
 LIMIT 10;
 ```
+
+calculating trip count and average trip distance by drop-off borough.
+```sql
+SELECT
+    zdo."Borough",
+    COUNT(*) AS trip_count,
+    AVG(t."trip_distance") AS avg_trip_distance
+FROM yellow_taxi_trips_2021_1 AS t
+JOIN zones AS zdo
+    ON t."DOLocationID" = zdo."LocationID"
+GROUP BY zdo."Borough"
+HAVING COUNT(*) >= 100
+ORDER BY avg_trip_distance DESC;
+```
